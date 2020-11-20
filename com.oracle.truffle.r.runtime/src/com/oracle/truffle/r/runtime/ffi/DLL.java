@@ -19,13 +19,6 @@
  */
 package com.oracle.truffle.r.runtime.ffi;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.CompilerDirectives;
@@ -80,6 +73,13 @@ import com.oracle.truffle.r.runtime.ffi.DLLRFFI.LibHandle;
 import com.oracle.truffle.r.runtime.ffi.RFFIFactory.Type;
 import com.oracle.truffle.r.runtime.nodes.RSyntaxNode;
 import com.oracle.truffle.r.runtime.rng.user.UserRNG;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * Support for Dynamically Loaded Libraries.
@@ -879,6 +879,14 @@ public class DLL {
             if (rns != null && rns.nst == NativeSymbolType.Fortran) {
                 mName = name.toLowerCase() + "_";
             }
+            SymbolHandle result = dynamicLookup(dllInfo, mName);
+            if (result == SYMBOL_NOT_FOUND && rns != null && rns.nst == NativeSymbolType.Any) {
+                result = dynamicLookup(dllInfo, name + "_");
+            }
+            return result;
+        }
+
+        private SymbolHandle dynamicLookup(DLLInfo dllInfo, String mName) {
             try {
                 if (dllInfo.unsuccessfulLookups.contains(mName)) {
                     return SYMBOL_NOT_FOUND;

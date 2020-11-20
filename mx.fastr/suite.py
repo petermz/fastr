@@ -8,7 +8,8 @@ suite = {
                "name" : "truffle",
                "subdir" : True,
                # The version must be the same as the version of Sulong
-               "version" : "1aa2659e9514de7f70fcee1b4b4e7fd7e452ff2d",
+               # TRUFFLE REVISION (note: this is a marker for script that can update this)
+               "version" : "724b23dce3e6aec3f0be7ca48d548aba05caeb4b",
                "urls" : [
                     {"url" : "https://github.com/graalvm/graal", "kind" : "git"},
                     {"url" : "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind" : "binary"},
@@ -18,7 +19,8 @@ suite = {
                "name" : "sulong",
                "subdir" : True,
                # The version must be the same as the version of Truffle
-               "version" : "1aa2659e9514de7f70fcee1b4b4e7fd7e452ff2d",
+               # TRUFFLE REVISION (note: this is a marker for script that can update this)
+               "version" : "724b23dce3e6aec3f0be7ca48d548aba05caeb4b",
                "urls" : [
                     {"url" : "https://github.com/graalvm/graal", "kind" : "git"},
                     {"url" : "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind" : "binary"},
@@ -196,7 +198,7 @@ suite = {
       "dependencies" : [
         "com.oracle.truffle.r.nodes.builtin",
         "com.oracle.truffle.r.parser",
-        "truffle:JLINE",
+        "sdk:JLINE3",
         "truffle:TRUFFLE_NFI",
       ],
      "generatedDependencies" : [
@@ -235,7 +237,7 @@ suite = {
       "dependencies" : [
         "sdk:GRAAL_SDK",
         "sdk:LAUNCHER_COMMON",
-        "truffle:JLINE",
+        "sdk:JLINE3",
       ],
       "checkstyle" : "com.oracle.truffle.r.runtime",
       "javaCompliance" : "8+",
@@ -408,7 +410,7 @@ suite = {
       ],
       "mainClass" : "com.oracle.truffle.r.launcher.RCommand",
       "exclude" : [
-        "truffle:JLINE",
+        "sdk:JLINE3",
         "truffle:ANTLR4",
         "GNUR",
         "XZ-1.8",
@@ -430,7 +432,7 @@ suite = {
       ],
       "mainClass" : "com.oracle.truffle.r.library.fastrGrid.server.RemoteDeviceServer",
       "exclude" : [
-        "truffle:JLINE",
+        "sdk:JLINE3",
         "truffle:ANTLR4",
         "GNUR",
         "XZ-1.8",

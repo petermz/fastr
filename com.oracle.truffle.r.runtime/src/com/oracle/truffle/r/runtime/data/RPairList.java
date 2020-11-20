@@ -39,6 +39,7 @@ import com.oracle.truffle.api.library.ExportMessage;
 import com.oracle.truffle.api.library.ExportMessage.Ignore;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.object.DynamicObject;
+import com.oracle.truffle.api.object.DynamicObjectLibrary;
 import com.oracle.truffle.api.profiles.BranchProfile;
 import com.oracle.truffle.api.profiles.ConditionProfile;
 import com.oracle.truffle.api.profiles.LoopConditionProfile;
@@ -302,7 +303,7 @@ public final class RPairList extends RAbstractContainer implements Iterable<RPai
                     RAttributesLayout.RAttribute attr = iter.next();
                     String attrName = attr.getName();
                     if (!(attrName.equals(RRuntime.NAMES_ATTR_KEY) || attrName.equals(RRuntime.DIM_ATTR_KEY) || attrName.equals(RRuntime.DIMNAMES_ATTR_KEY))) {
-                        resultAttrs.define(attrName, attr.getValue());
+                        DynamicObjectLibrary.getUncached().put(resultAttrs, attrName, attr.getValue());
                     }
                 }
             }
@@ -401,7 +402,7 @@ public final class RPairList extends RAbstractContainer implements Iterable<RPai
                 RAttributesLayout.RAttribute attr = iter.next();
                 String attrName = attr.getName();
                 if (!(attrName.equals(RRuntime.NAMES_ATTR_KEY) || attrName.equals(RRuntime.DIM_ATTR_KEY) || attrName.equals(RRuntime.DIMNAMES_ATTR_KEY))) {
-                    resultAttrs.define(attrName, attr.getValue());
+                    DynamicObjectLibrary.getUncached().put(resultAttrs, attrName, attr.getValue());
                 }
             }
         }
@@ -1310,6 +1311,24 @@ public final class RPairList extends RAbstractContainer implements Iterable<RPai
             return snapshot.root == other;
         }
 
+    }
+
+    // -------------------------------
+    // AbstractContainerLibrary
+    @ExportMessage(name = "duplicate", library = AbstractContainerLibrary.class)
+    public RAbstractContainer duplicate(boolean deep) {
+        if (deep) {
+            RSharingAttributeStorage copy = deepCopy();
+            // deepCopy currently returns in fact only RAbstractContainer instances. If this
+            // behavior changes in the future, we should modify the signature of
+            // AbstractContainerLibrary.duplicate method.
+            // Note that only RPairList has special handling of AbstractContainerLibrary.duplicate
+            // method.
+            assert copy instanceof RAbstractContainer;
+            return (RAbstractContainer) copy;
+        } else {
+            return copy();
+        }
     }
 
     // -------------------------------

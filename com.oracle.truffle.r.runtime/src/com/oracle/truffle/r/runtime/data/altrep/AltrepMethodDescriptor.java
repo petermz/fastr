@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -20,17 +20,18 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-#include <Rinternals.h>
-#include "rffi_upcalls.h"
+package com.oracle.truffle.r.runtime.data.altrep;
 
-SEXP Rf_matchE(SEXP itable, SEXP ix, int nmatch, SEXP env)
-{
-	unimplemented("Rf_matchE");
+import com.oracle.truffle.r.runtime.ffi.RFFIFactory;
+
+public class AltrepMethodDescriptor {
+    // A TruffleObject that is executable with InteropLibrary.execute.
+    public final Object method;
+    // Currently either LLVM or NFI.
+    public final RFFIFactory.Type rffiType;
+
+    public AltrepMethodDescriptor(Object method, RFFIFactory.Type rffiType) {
+        this.method = method;
+        this.rffiType = rffiType;
+    }
 }
-
-/* used from other code, not here: */
-SEXP Rf_match(SEXP itable, SEXP ix, int nmatch)
-{
-	return ((call_Rf_match) callbacks[Rf_match_x])(itable, ix, nmatch);
-}
-
